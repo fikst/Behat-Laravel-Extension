@@ -3,6 +3,7 @@
 namespace Laracasts\Behat\ServiceContainer;
 
 use Behat\Testwork\ServiceContainer\Extension;
+use Symfony\Component\DependencyInjection\Reference;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Symfony\Component\DependencyInjection\Definition;
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
@@ -105,7 +106,9 @@ class BehatExtension implements Extension
      */
     private function loadLaravelArgumentResolver(ContainerBuilder $container, $app)
     {
-        $definition = new Definition(LaravelArgumentResolver::class, [$app]);
+        $definition = new Definition(LaravelArgumentResolver::class, [
+            new Reference('laravel.app')
+        ]);
         $definition->addTag(ContextExtension::ARGUMENT_RESOLVER_TAG, ['priority' => 0]);
         $container->setDefinition('laravel.context.argument.service_resolver', $definition);
     }
